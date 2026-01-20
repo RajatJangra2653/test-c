@@ -5,58 +5,49 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
+            margin: 20px;
         }
         .calculator {
-            display: inline-block;
+            max-width: 300px;
+            margin: 0 auto;
             padding: 20px;
             border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        input[type="text"], select {
-            margin: 10px 5px;
-            padding: 5px;
-            width: 200px;
-        }
-        button {
-            padding: 10px 25px;
-            margin-top: 10px;
-            cursor: pointer;
-            border: none;
-            background-color: #007BFF;
-            color: white;
             border-radius: 5px;
+            background-color: #f9f9f9;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .error, .result {
-            margin-top: 20px;
+        .calculator input, .calculator select, .calculator button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
             font-size: 16px;
+        }
+        .result {
+            font-weight: bold;
+            margin: 10px 0;
+            color: green;
+        }
+        .error {
+            font-weight: bold;
+            margin: 10px 0;
             color: red;
         }
     </style>
 </head>
 <body>
-    <h1>Simple Calculator</h1>
     <div class="calculator">
-        <h3>Enter two numbers and select an operation:</h3>
-        <input type="text" id="num1" placeholder="First Number">
-        <input type="text" id="num2" placeholder="Second Number">
-        <br>
-        <select id="operation">
-            <option value="">Select Operation</option>
-            <option value="add">Addition</option>
-            <option value="subtract">Subtraction</option>
-            <option value="multiply">Multiplication</option>
-            <option value="divide">Division</option>
-        </select>
-        <br>
-        <button onclick="calculate()">Calculate</button>
-        <div class="result" id="result"></div>
-        <div class="error" id="error"></div>
+        <h2>Simple Calculator</h2>
+        <form id="calculatorForm">
+            <input type="number" id="num1" placeholder="Enter first number" required>
+            <input type="number" id="num2" placeholder="Enter second number" required>
+            <select id="operation">
+                <option value="add">Addition (+)</option>
+                <option value="subtract">Subtraction (-)</option>
+                <option value="multiply">Multiplication (*)</option>
+                <option value="divide">Division (/)</option>
+            </select>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </form>
+        <div id="output"></div>
     </div>
 
     <script>
@@ -64,41 +55,39 @@
             const num1 = parseFloat(document.getElementById('num1').value);
             const num2 = parseFloat(document.getElementById('num2').value);
             const operation = document.getElementById('operation').value;
-            const resultDiv = document.getElementById('result');
-            const errorDiv = document.getElementById('error');
-
-            resultDiv.innerHTML = '';
-            errorDiv.innerHTML = '';
-
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+            
             if (isNaN(num1) || isNaN(num2)) {
-                errorDiv.innerHTML = "Error: Please enter valid numbers.";
-                return;
-            }
-
-            if (operation === "") {
-                errorDiv.innerHTML = "Error: Please select an operation.";
+                outputDiv.innerHTML = '<div class="error">Error: Please enter valid numbers.</div>';
                 return;
             }
 
             let result;
-            if (operation === "add") {
-                result = num1 + num2;
-            } else if (operation === "subtract") {
-                result = num1 - num2;
-            } else if (operation === "multiply") {
-                result = num1 * num2;
-            } else if (operation === "divide") {
-                if (num2 === 0) {
-                    errorDiv.innerHTML = "Error: Division by zero is not allowed.";
-                    return;
-                }
-                result = num1 / num2;
-            } else {
-                errorDiv.innerHTML = "Error: Invalid operation.";
-                return;
+            switch (operation) {
+                case 'add':
+                    result = num1 + num2;
+                    outputDiv.innerHTML = `<div class="result">Result: ${num1} + ${num2} = ${result}</div>`;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    outputDiv.innerHTML = `<div class="result">Result: ${num1} - ${num2} = ${result}</div>`;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    outputDiv.innerHTML = `<div class="result">Result: ${num1} * ${num2} = ${result}</div>`;
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        outputDiv.innerHTML = '<div class="error">Error: Division by zero is not allowed.</div>';
+                    } else {
+                        result = num1 / num2;
+                        outputDiv.innerHTML = `<div class="result">Result: ${num1} / ${num2} = ${result}</div>`;
+                    }
+                    break;
+                default:
+                    outputDiv.innerHTML = '<div class="error">Error: Invalid operation selected.</div>';
             }
-
-            resultDiv.innerHTML = `The result is: ${result}`;
         }
     </script>
 </body>
